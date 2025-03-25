@@ -1,0 +1,62 @@
+// schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // or "sqlite" if not deploying
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id           Int           @id
+  availability Availability[]
+}
+
+model Availability {
+  id        Int        @id @default(autoincrement())
+  productId Int
+  date      DateTime
+  timeSlots TimeSlot[]
+  product   Product    @relation(fields: [productId], references: [id])
+
+  @@unique([productId, date])
+}
+
+model TimeSlot {
+  id             Int              @id @default(autoincrement())
+  availabilityId Int
+  startTime      String
+  endTime        String
+  providerSlotId String          @unique
+  variantId      Int
+  currencyCode   String
+  remaining      Int
+  availability   Availability     @relation(fields: [availabilityId], references: [id])
+  paxAvailability PaxAvailability[]
+
+  @@unique([availabilityId, startTime])
+}
+
+model PaxType {
+  id              Int              @id @default(autoincrement())
+  type            String           @unique
+  name            String?
+  description     String?
+  paxAvailability PaxAvailability[]
+}
+
+model PaxAvailability {
+  id         Int      @id @default(autoincrement())
+  timeSlotId Int
+  paxTypeId  Int
+  price      Json     // { discount, finalPrice, originalPrice, currencyCode }
+  min        Int?
+  max        Int?
+  remaining  Int
+  isPrimary  Boolean  @default(false)
+  timeSlot   TimeSlot @relation(fields: [timeSlotId], references: [id])
+  paxType    PaxType  @relation(fields: [paxTypeId], references: [id])
+
+  @@unique([timeSlotId, paxTypeId])
+}
