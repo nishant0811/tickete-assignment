@@ -1,3 +1,5 @@
+NOTE : This readme is generated with help of AI
+
 # Tickete Inventory Integration Service
 
 A robust NestJS application for seamlessly integrating with the Tickete Inventory API, providing a reliable inventory management system for activity booking platforms.
@@ -18,7 +20,7 @@ This service fetches inventory data from the Tickete API and stores it in a norm
 ## Technology Stack
 
 - **Framework**: NestJS
-- **Database**: PostgreSQL (or SQLite for local development)
+- **Database**: PostgreSQL
 - **ORM**: Prisma
 - **API Communication**: Axios
 - **Scheduling**: NestJS Schedule
